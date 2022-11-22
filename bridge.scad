@@ -19,6 +19,8 @@ BAL_RAD = 1.5;
 JOINT_RAD = 0.9;
 MARGIN = 3;
 
+ROAD_H = 1;
+
 echo ("Print height", (MARGIN + 2*JOINT_RAD) * 5, "mm");
 
 function cosh (x) = (exp (x) + exp(-x)) / 2;
@@ -316,28 +318,43 @@ module side () {
 }
 
 module vei () {
-    color("red")
-        translate([0,0,1.5*BEAM_RAD])
+    color("#222")
+        translate([0,0,BEAM_RAD + ROAD_H/2])
         cube([
             length + 2*JOINT_RAD * BASE_RESCALE,
             width - MARGIN * 2 - JOINT_RAD * 2,
-            1
+            ROAD_H
         ],center=true);
 
-    for (i = [-1, 1])
-        color("teal")
+    for (i = [-1, 1]) {
+        color("#666")
             translate([
-                0,
-                i * (width/2 - MARGIN/2 - JOINT_RAD),
-                1* BEAM_RAD
+                    0,
+                    i * (width/2 - MARGIN/2 - JOINT_RAD),
+                    JOINT_RAD + ROAD_H / 2
+            ])
+            cube([
+                    length + 2 * JOINT_RAD * BASE_RESCALE,
+                    MARGIN,
+                    ROAD_H
+            ], center=true);
+        color("#FFF")
+            translate([
+                    0,
+                    i * (width/2 - MARGIN - JOINT_RAD - 0.5),
+                    BEAM_RAD + ROAD_H + 0.01
             ])
             cube([
                 length + 2 * JOINT_RAD * BASE_RESCALE,
-                MARGIN,
-                2
+                0.3,
+                0.01
             ], center=true);
+    }
 
-
+    color("yellow")
+        for (i = [-3:3])
+            translate ([i*12,0, BEAM_RAD + ROAD_H/2 + 0.01])
+            cube([9,.3,ROAD_H], center=true);
 }
 
 module main() {
