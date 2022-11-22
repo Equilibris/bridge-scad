@@ -19,7 +19,7 @@ BAL_RAD = 1.5;
 JOINT_RAD = 0.9;
 MARGIN = 3;
 
-echo ("Print height", (MARGIN + 2*JOINT_RAD) * 10, "mm");
+echo ("Print height", (MARGIN + 2*JOINT_RAD) * 5, "mm");
 
 function cosh (x) = (exp (x) + exp(-x)) / 2;
 function sinh (x) = (exp (x) - exp(-x)) / 2;
@@ -61,7 +61,7 @@ module c3ft(from, to, rad) {
 }
 
 module num (n,h=1) {
-    translate([0,0,-0.5])
+    color("teal") translate([0,0,-0.5])
         linear_extrude(height=h, convexity=4)
         text(str(n), 
             size=1,
@@ -293,26 +293,21 @@ module ball_size () {
     }
 }
 module balls () {
-    if ($preview) {
-        cylinder(JOINT_RAD * 2 + MARGIN,1,1);
-    }
+    if ($preview) translate([0,-10,0]) cylinder(JOINT_RAD * 2 + MARGIN,1,1);
     
     rotate([-90,0,0])
         translate([0, -width / 2 - JOINT_RAD, 0]) 
-        union () {
-            difference() {
-                translate([0, width/2,0]) rotate([180,180,0]) ball_size();
-                base_beams(n);
-                cross_beams(n, height);
-            }
-    }
+        difference() {
+            translate([0, width/2,0]) rotate([180,180,0]) ball_size();
+            base_beams(n);
+            cross_beams(n, height);
+        }
+    
 }
-
-
 module side () {
-    color("teal") arch (n, height);
+    arch (n, height);
     beams(n, height);
-    color("coral") baseline(n);
+    baseline(n);
     supports(n, height);
     rotate([0,0,180]) 
         supports(n, height);
@@ -320,12 +315,38 @@ module side () {
         cylinder(length, BEAM_RAD, BEAM_RAD, true);
 }
 
-module main() {
-    union () {
-        translate([0, width/2,0]) rotate([0,0,180]) { side(); }
-        translate([0,-width/2,0]) { side(); }
-        cross_beams(n, height);
-        base_beams(n);
-    }
+module vei () {
+    color("red")
+        translate([0,0,1.5*BEAM_RAD])
+        cube([
+            length + 2*JOINT_RAD * BASE_RESCALE,
+            width - MARGIN * 2 - JOINT_RAD * 2,
+            1
+        ],center=true);
+
+    for (i = [-1, 1])
+        color("teal")
+            translate([
+                0,
+                i * (width/2 - MARGIN/2 - JOINT_RAD),
+                1* BEAM_RAD
+            ])
+            cube([
+                length + 2 * JOINT_RAD * BASE_RESCALE,
+                MARGIN,
+                2
+            ], center=true);
+
+
 }
-balls();
+
+module main() {
+    translate([0, width/2,0]) rotate([0,0,180]) { side(); }
+    translate([0,-width/2,0]) { side(); }
+    cross_beams(n, height);
+
+    vei();
+
+    base_beams(n);
+}
+main();
