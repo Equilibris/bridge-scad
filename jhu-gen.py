@@ -1,7 +1,10 @@
-from math import exp
+from math import exp, sqrt
 import json
 
 n = 7;
+
+# Bridge class A
+length_irl = 28 * 100;
 
 length = 80;
 width = 20;
@@ -18,41 +21,79 @@ BAL_RAD = 1.5;
 JOINT_RAD = 0.9;
 MARGIN = 3;
 
+ROAD_H = 1;
+
+mod2irl = length_irl / length;
+
 cosh = lambda x: (exp (x) + exp(-x)) / 2
 norm_gain_cosh = lambda x: (-cosh(x * gain) + cosh(gain))/(cosh(gain) - 1)
 
 p2pm = lambda x: 2 * ((x) - 0.5)
 pm2p = lambda x: (x + 1) / 2
 
-nodes = [ ]
-
+dst = lambda a, b: sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)
 inc = length / n
+
+# Calculate forces
+
+l_m_irl = length_irl/100
+w_m_irl = (mod2irl * width)/100
+
+print(l_m_irl, "m", w_m_irl,"m")
+
+len_car = 4.5
+mass_car = 3.5e3
+lain = 2
+g = 9.81
+
+total_force_irl = (2 * mass_car * l_m_irl / len_car) * g
+print(total_force_irl,"N")
+
+pascal = total_force_irl / (l_m_irl * w_m_irl)
+print(pascal,"Pa")
+
+total_force_model = pascal * (width / 100) * (length / 100)
+print(total_force_model,"N",total_force_model/g,"kg")
+
+distribution = total_force_model / (n - 1)
+print(distribution, "N")
+
+# Build Bridge
+nodes = [ ]
 
 for i in range(n):
     iz = i + .5
     x = p2pm(iz / n)
     y = norm_gain_cosh(x)
 
-    nodes.append(f'{round(i * inc,  2)},0')
-    nodes.append(f'{round(iz * inc, 2)},{round(y * height, 2)}')
+    nodes.append((round(i * inc,  2), 0))
+    nodes.append((round(iz * inc, 2), round(y * height, 2)))
 
-nodes.append(f'{length},0')
+nodes.append((length,0))
 
 members = []
+member_dst = {}
+
 for i in range(0,2*n-1,2):
-    members.append(f'{i},{i+2}')
+    a_dst = f'{i},{i+2}'
+    member_dst[a_dst] = dst(nodes[i],nodes[i+2])
+    members.append(a_dst)
     if i+3 < n * 2:
-        members.append(f'{i+1},{i+3}')
+        b_dst = f'{i+1},{i+3}'
+        member_dst[b_dst] = dst(nodes[i+1],nodes[i+3])
+        members.append(b_dst)
 
 for i in range(n*2):
-    members.append(f'{i},{i+1}')
+    a_dst = f'{i},{i+1}'
+    members.append(a_dst)
+    member_dst[a_dst] = dst(nodes[i],nodes[i+1])
 
 with open('out.json','w') as f:
     f.write(json.dumps({
-        "nodes": nodes,
+        "nodes": list(map(lambda x: f'{x[0]},{x[1]}',nodes)),
         "members": members,
         "supports": { "0": "P", f"{n*2}": "Rh" },
-        "forces": [],
+        "forces": list(map(lambda x: f'{x*2},0,{-distribution}',range(1,n))),
         "workspace": {
           "workspace-width": 187,
           "workspace-height": 102,
@@ -65,4 +106,8 @@ with open('out.json','w') as f:
         }
     }))
 
+print(nodes[1],nodes[3])
+
+for k,v in member_dst.items():
+    print(f'{k:<6} {round(v,1)}')
 
