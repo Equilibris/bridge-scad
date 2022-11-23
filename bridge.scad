@@ -4,6 +4,9 @@ $fa = $preview ? 0.5 :   1;
 
 n = 7;
 
+// Bridge class A
+length_irl = 28 * 100;
+
 length = 80;
 width = 20;
 height = 25;
@@ -21,7 +24,10 @@ MARGIN = 3;
 
 ROAD_H = 1;
 
+mod2irl = length_irl / length;
+
 echo ("Print height", (MARGIN + 2*JOINT_RAD) * 5, "mm");
+echo ("Scale", mod2irl);
 
 function cosh (x) = (exp (x) + exp(-x)) / 2;
 function sinh (x) = (exp (x) - exp(-x)) / 2;
@@ -179,12 +185,13 @@ module beams (points, height) {
             x0 = p2pm(is / points),
             y0 = norm_gain_cosh(x0),
             x1 = p2pm((is + 1) / points),
-            y1 = norm_gain_cosh(x1)
-        ) cft(
-            [   is    * inc - center, 0, height * y0],
-            [(is + 1) * inc - center, 0, height * y1],
-            BEAM_RAD
-        );
+            y1 = norm_gain_cosh(x1),
+            pt = [   is    * inc - center, 0, height * y0],
+            p1 = [(is + 1) * inc - center, 0, height * y1]
+        ) {
+            echo("Num",i+n+1,"To",i+n+2, norm(pt - p1))
+            cft(pt, p1, BEAM_RAD);
+        }
 }
 
 module baseline (points) {
@@ -249,6 +256,7 @@ module baseline (points) {
 
             translate(pt + [0, 0, -JOINT_RAD + 0.3])
                 num(i);
+            echo("Num", i, "To", i + n + 1, norm(p1 - pt));
         }
 }
 
@@ -278,6 +286,8 @@ module supports (points, height) {
         );
 }
 
+for(i = [0:n-1])
+    echo("Num",i,"To",i+1,length / n);
 
 module ball_size () {
     difference() {
@@ -296,7 +306,7 @@ module ball_size () {
 }
 module balls () {
     if ($preview) translate([0,-10,0]) cylinder(JOINT_RAD * 2 + MARGIN,1,1);
-    
+
     rotate([-90,0,0])
         translate([0, -width / 2 - JOINT_RAD, 0]) 
         difference() {
@@ -304,7 +314,6 @@ module balls () {
             base_beams(n);
             cross_beams(n, height);
         }
-    
 }
 module side () {
     arch (n, height);
@@ -317,7 +326,34 @@ module side () {
         cylinder(length, BEAM_RAD, BEAM_RAD, true);
 }
 
-module vei () {
+module legend () {
+    translate([
+        -(length/2 + JOINT_RAD * BASE_RESCALE + 1),
+        0,
+        0
+    ]) let (w = width - MARGIN * 2 - JOINT_RAD * 2) {
+        cube([
+            1,
+            w,
+            ROAD_H
+        ], center=true);
+        translate([-1,0,0])
+            linear_extrude(1,center=true)
+            text(str("VB ",str(w*mod2irl),"cm"),halign="right",valign="center",size=5);
+    }
+}
+
+module roadmarking_with_distance (on, off, l, w=0.3, center=true) {
+    let(
+        dst = on + off,
+        num = floor(l/dst)
+    ) translate([center ? -num * dst / 2 : on/2,0,0])
+        for (i = [0:num])
+            translate([i*dst,0,0])
+                cube([on,w,ROAD_H],center=true);
+}
+
+module road () {
     color("#222")
         translate([0,0,BEAM_RAD + ROAD_H/2])
         cube([
@@ -338,23 +374,40 @@ module vei () {
                     MARGIN,
                     ROAD_H
             ], center=true);
+    }
+
+    for ( i = [-1,1]) 
+    let (
+        w = width - MARGIN * 2 - JOINT_RAD * 2,
+        sideline = [
+            0,
+            i * (width/2 - MARGIN - JOINT_RAD - 0.5),
+            BEAM_RAD + ROAD_H + 0.01
+        ],
+        major = 9,
+        minor = 3
+    ) if (w * mod2irl > 550) {
         color("#FFF")
-            translate([
-                    0,
-                    i * (width/2 - MARGIN - JOINT_RAD - 0.5),
-                    BEAM_RAD + ROAD_H + 0.01
-            ])
+            translate(sideline)
             cube([
                 length + 2 * JOINT_RAD * BASE_RESCALE,
                 0.3,
                 0.01
             ], center=true);
-    }
+        color("yellow")
+            translate([0,0,BEAM_RAD + ROAD_H/2 + 0.01])
+            roadmarking_with_distance(major,minor,length);
+    } else 
+        color("#FFF")
+            translate(sideline)
+            roadmarking_with_distance(major,minor,length);
+}
 
-    color("yellow")
-        for (i = [-3:3])
-            translate ([i*12,0, BEAM_RAD + ROAD_H/2 + 0.01])
-            cube([9,.3,ROAD_H], center=true);
+module pipe () {
+    difference() {
+        cylinder(4,1.2,1.2,center=true);
+        cylinder(10,BEAM_RAD, BEAM_RAD,center=true);
+    }
 }
 
 module main() {
@@ -362,8 +415,15 @@ module main() {
     translate([0,-width/2,0]) { side(); }
     cross_beams(n, height);
 
-    vei();
+    road();
+    legend();
 
     base_beams(n);
+
+    for (i = [-1, 1]) {
+        rotate([0,90,0])
+        translate([0,i * width/2,0]) pipe();
+    }
 }
 main();
+
