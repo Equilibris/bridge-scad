@@ -15,7 +15,7 @@ gain = 3;
 
 STEP_PERCENT_A = .30;
 STEP_PERCENT_B = .30;
-BASE_RESCALE = 2;
+BASE_RESCALE = 4;
 BEAM_RAD = 0.7;
 BAL_RAD = 1.5;
 
@@ -405,7 +405,7 @@ module road () {
 
 module pipe () {
     difference() {
-        cylinder(4,1.2,1.2,center=true);
+        cylinder(3,1.2,1.2,center=true);
         cylinder(10,BEAM_RAD, BEAM_RAD,center=true);
     }
 }
@@ -425,5 +425,5 @@ module main() {
         translate([0,i * width/2,0]) pipe();
     }
 }
-main();
+balls();
 
