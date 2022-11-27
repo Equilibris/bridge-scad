@@ -13,20 +13,24 @@ height = 25;
 
 gain = 3;
 
-STEP_PERCENT_A = .30;
-STEP_PERCENT_B = .30;
-BASE_RESCALE = 4;
-BEAM_RAD = 0.7;
-BAL_RAD = 1.5;
+S = 0.5;
 
-JOINT_RAD = 0.9;
-MARGIN = 3;
+STEP_PERCENT_A = .28;
+STEP_PERCENT_B = .25;
+BASE_RESCALE = 6;
+BEAM_RAD = 0.7*S;
+BAL_RAD = 1.5*S;
+
+JOINT_RAD = 0.9*S;
+MARGIN = 3*S;
+
+STANDOFF_RAD = 1.38;
 
 ROAD_H = 1;
 
 mod2irl = length_irl / length;
 
-echo ("Print height", (MARGIN + 2*JOINT_RAD) * 5, "mm");
+echo ("Print height", (MARGIN + 2*JOINT_RAD) * 10, "mm");
 echo ("Scale", mod2irl);
 
 function cosh (x) = (exp (x) + exp(-x)) / 2;
@@ -72,13 +76,13 @@ module num (n,h=1) {
     color("teal") translate([0,0,-0.5])
         linear_extrude(height=h, convexity=4)
         text(str(n), 
-            size=1,
+            size=S,
             font="Consolas",
             halign="center",
             valign="center");
 }
 
-module arch (points, height) {
+module arch (points, height,nums=true) {
     for (i = [0:points -1]) 
         let (
             inc = length / points,
@@ -152,7 +156,8 @@ module arch (points, height) {
                 linear_extrude(JOINT_RAD * 2, center=true)
                 polygon(l_ssa3);
 
-            translate(pt)
+            if(nums)
+                translate(pt)
                 rotate([0,-angle,0])
                 translate([0, 0, BAL_RAD - 0.25])
                 num(points + 1 + i);
@@ -185,16 +190,15 @@ module beams (points, height) {
             x0 = p2pm(is / points),
             y0 = norm_gain_cosh(x0),
             x1 = p2pm((is + 1) / points),
-            y1 = norm_gain_cosh(x1),
-            pt = [   is    * inc - center, 0, height * y0],
-            p1 = [(is + 1) * inc - center, 0, height * y1]
-        ) {
-            echo("Num",i+n+1,"To",i+n+2, norm(pt - p1))
-            cft(pt, p1, BEAM_RAD);
-        }
+            y1 = norm_gain_cosh(x1)
+        ) cft(
+            [   is    * inc - center, 0, height * y0],
+            [(is + 1) * inc - center, 0, height * y1],
+            BEAM_RAD
+        );
 }
 
-module baseline (points) {
+module baseline (points,nums=true) {
     for ( i = [0 : points] )
         let (
             inc = length / points,
@@ -213,8 +217,8 @@ module baseline (points) {
             p1 = [ i1   * inc - center, 0, height * y1],
             p2 = [ i2   * inc - center, 0, height * y2],
 
-            p1ptB = (p1 - pt)*STEP_PERCENT_B,
-            p2ptB = (p2 - pt)*STEP_PERCENT_B,
+            p1ptB = (p1 - pt)*STEP_PERCENT_A,
+            p2ptB = (p2 - pt)*STEP_PERCENT_A,
 
             l_ssa1 = [
                 [JOINT_RAD * BASE_RESCALE, 0],
@@ -254,9 +258,10 @@ module baseline (points) {
                 linear_extrude(JOINT_RAD * 2, center=true)
                 polygon(l_ssa3);
 
-            translate(pt + [0, 0, -JOINT_RAD + 0.3])
-                num(i);
-            echo("Num", i, "To", i + n + 1, norm(p1 - pt));
+            if(nums) {
+                translate(pt + [0, 0, -JOINT_RAD + 0.3]) num(i);
+                echo("Num", i, "To", i + n + 1, norm(p1 - pt));
+            }
         }
 }
 
@@ -289,13 +294,48 @@ module supports (points, height) {
 for(i = [0:n-1])
     echo("Num",i,"To",i+1,length / n);
 
+module standoff () {
+    translate([0,-2* JOINT_RAD,0])
+    rotate([90,0,0])
+    difference() {
+        cylinder(JOINT_RAD*4,STANDOFF_RAD,STANDOFF_RAD,center=true);
+        cylinder(JOINT_RAD*4,BEAM_RAD,BEAM_RAD,center=true);
+    }
+}
+
+module unifiedstandoff(points) {
+    for ( i = [0 : points] )
+        let (
+            inc = length / points,
+            center = length / 2,
+            pt = [i * inc - center, 0, 0]
+        ) {
+            translate(pt)standoff();
+        }
+    for (i = [0:points - 1]) 
+        let (
+            inc = length / points,
+            center = length / 2,
+
+            is = i + 0.5,
+
+            x0 = p2pm(is / points),
+            y0 = norm_gain_cosh(x0),
+            x1 = p2pm((is + 1) / points),
+            y1 = norm_gain_cosh(x1)
+        ) translate([is * inc - center, 0, height * y0])standoff();
+}
+
+module b (nums=true) {
+    union() {
+        arch (n, height, nums);
+        baseline(n,nums);
+    }
+}
+
 module ball_size () {
     difference() {
-        union() {
-            arch (n, height);
-            baseline(n);
-        }
-
+        b();
         beams(n, height);
         supports(n, height);
         rotate([0,0,180]) 
@@ -304,16 +344,21 @@ module ball_size () {
             cylinder(length, BEAM_RAD, BEAM_RAD, true);
     }
 }
+
+
 module balls () {
     if ($preview) translate([0,-10,0]) cylinder(JOINT_RAD * 2 + MARGIN,1,1);
-
-    rotate([-90,0,0])
+    
+    rotate([-90,0,0]) {
+        intersection () { unifiedstandoff(n); scale([1,2,1])b(false); }
         translate([0, -width / 2 - JOINT_RAD, 0]) 
         difference() {
             translate([0, width/2,0]) rotate([180,180,0]) ball_size();
             base_beams(n);
             cross_beams(n, height);
         }
+    }
+    
 }
 module side () {
     arch (n, height);
@@ -425,5 +470,8 @@ module main() {
         translate([0,i * width/2,0]) pipe();
     }
 }
-balls();
+//difference () {
+    main();
 
+//   translate([0,0,2.5])cube([100,100,4], center=true);
+//}
