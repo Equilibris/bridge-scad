@@ -25,6 +25,7 @@ JOINT_RAD = 0.9*S;
 MARGIN = 3*S;
 
 STANDOFF_RAD = 1.38;
+impl_stansoff_val = STANDOFF_RAD * 2;
 
 ROAD_H = 1;
 
@@ -56,7 +57,6 @@ module cft(from, to, rad) {
        translate(from)
             rotate([rotx, 0, roty]) 
             cylinder(mag, rad, rad);
-        /* echo("mag",mag); */
     }
 }
 
@@ -260,7 +260,15 @@ module baseline (points,nums=true) {
 
             if(nums) {
                 translate(pt + [0, 0, -JOINT_RAD + 0.3]) num(i);
-                echo("Num", i, "To", i + n + 1, norm(p1 - pt));
+                echo(
+                    "Num",
+                    i,
+                    "To",
+                    i + n + 1,
+                    round(
+                        (norm(p1 - pt) - impl_stansoff_val)*10
+                    )/10
+                );
             }
         }
 }
@@ -292,7 +300,7 @@ module supports (points, height) {
 }
 
 for(i = [0:n-1])
-    echo("Num",i,"To",i+1,length / n);
+    echo("Num",i,"To",i+1, round(10 * (length / n - impl_stansoff_val)) / 10);
 
 module standoff () {
     translate([0,-2* JOINT_RAD,0])
@@ -348,7 +356,7 @@ module ball_size () {
 
 module balls () {
     if ($preview) translate([0,-10,0]) cylinder(JOINT_RAD * 2 + MARGIN,1,1);
-    
+
     rotate([-90,0,0]) {
         intersection () { unifiedstandoff(n); scale([1,2,1])b(false); }
         translate([0, -width / 2 - JOINT_RAD, 0]) 
@@ -358,7 +366,6 @@ module balls () {
             cross_beams(n, height);
         }
     }
-    
 }
 module side () {
     arch (n, height);
@@ -470,8 +477,9 @@ module main() {
         translate([0,i * width/2,0]) pipe();
     }
 }
-//difference () {
-    main();
+main();
+/* difference () { */
+/*    balls(); */
 
-//   translate([0,0,2.5])cube([100,100,4], center=true);
-//}
+/*    translate([0,0,2.5])cube([100,100,4], center=true); */
+/* } */
