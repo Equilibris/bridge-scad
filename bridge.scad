@@ -158,9 +158,12 @@ module arch (points, height,nums=true) {
 
             if(nums)
                 translate(pt)
-                rotate([0,-angle,0])
-                translate([0, 0, BAL_RAD - 0.25])
-                num(points + 1 + i);
+                    rotate([0,-angle,0])
+                    translate([0, 0, BAL_RAD - 0.25])
+                    num(points + 1 + i);
+
+            if(i != points-1 && nums)
+                echo ("Num", points + 1 + i, "to", points + 2 + i, round(10 * (norm(p1 - pt) - impl_stansoff_val)) / 10);
         }
 }
 
@@ -258,8 +261,10 @@ module baseline (points,nums=true) {
                 linear_extrude(JOINT_RAD * 2, center=true)
                 polygon(l_ssa3);
 
-            if(nums) {
+            if(nums)
                 translate(pt + [0, 0, -JOINT_RAD + 0.3]) num(i);
+
+            if (nums && i != points)
                 echo(
                     "Num",
                     i,
@@ -269,7 +274,6 @@ module baseline (points,nums=true) {
                         (norm(p1 - pt) - impl_stansoff_val)*10
                     )/10
                 );
-            }
         }
 }
 
