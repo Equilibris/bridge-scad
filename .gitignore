@@ -1,5 +1,7 @@
 out.json
 *.stl
+*.pdf
+frame*.png
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
