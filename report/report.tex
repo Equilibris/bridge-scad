@@ -1,5 +1,6 @@
 \documentclass{report}
 
+\usepackage{float}
 \usepackage{titlesec}
 \usepackage{graphicx}
 \usepackage{amsmath}
@@ -8,6 +9,8 @@
 \usepackage{xcolor}
 
 \graphicspath{ {./assets/} {..} }
+
+\newcommand{\subimgw}{.5\linewidth}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -64,57 +67,19 @@ En firkant er svakest siden den har mulighet til å oppleve plan-forskyvning.
 
 \subsection*{B}
 
-\begin{figure}[h]
+Triangulær pyramide har de samme styrkene som en likesidet trekant hvor hvor den tåler fra hver av sidene og den fordeler likt gjennom hele figuren
+
+\begin{figure}[H]
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=.7\linewidth]{cube-a}
-
-		\caption{Cube}
-		\label{fig:cube:a}
-	\end{subfigure}%
-	\begin{subfigure}{.5\textwidth}
-		\centering
-		\includegraphics[width=.7\linewidth]{cube-untranslated}
-
-		\caption{Undemonstartive cube}
-		\label{fig:cube:untranslated}
-	\end{subfigure}
-
-	\caption{Cube}
-	\label{fig:cube}
-\end{figure}
-
-\begin{figure}[ht]
-	\begin{subfigure}{.5\textwidth}
-		\centering
-		\includegraphics[width=.7\linewidth]{pyramid-a}
-
-		\caption{Compression bucle of quad-pyramid}
-		\label{fig:pyramid:a}
-	\end{subfigure}%
-	\begin{subfigure}{.5\textwidth}
-		\centering
-		\includegraphics[width=.7\linewidth]{pyramid-untranslated}
-
-		\caption{Buckle force direction of tetrehedra}
-		\label{fig:pyramid:untranslated}
-	\end{subfigure}
-
-	\caption{Tetrehedra}
-	\label{fig:pyramid}
-\end{figure}
-
-\begin{figure}[ht]
-	\begin{subfigure}{.5\textwidth}
-		\centering
-		\includegraphics[width=.7\linewidth]{tetrehedra-a}
+		\includegraphics[width=\subimgw]{tetrehedra-a}
 		\caption{Compression bucle isomorphism}
 
 		\label{fig:tetrehedra:a}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=.7\linewidth]{tetrehedra-b}
+		\includegraphics[width=\subimgw]{tetrehedra-b}
 		\caption{Buckle force direction of tetrehedra}
 
 		\label{fig:tetrehedra:untranslated}
@@ -124,12 +89,49 @@ En firkant er svakest siden den har mulighet til å oppleve plan-forskyvning.
 	\label{fig:tetrehedra}
 \end{figure}
 
-Triangulær pyramide har de samme styrkene som en likesidet trekant hvor hvor den tåler fra hver av sidene og den fordeler likt gjennom hele figuren
-
 Rektangulær trekant har de samme styrkene som en likebeint trekant hvor den korteste kateten tåler mest siden den fordeler kraften på de lengere katetene, men det dumme med rektangulær pyramide er at den kan oppleve planforskyving.
 
+\begin{figure}[H]
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=\subimgw]{pyramid-a}
+
+		\caption{Compression bucle of quad-pyramid}
+		\label{fig:pyramid:a}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=\subimgw]{pyramid-untranslated}
+
+		\caption{Buckle force direction of tetrehedra}
+		\label{fig:pyramid:untranslated}
+	\end{subfigure}
+
+	\caption{Tetrehedra}
+	\label{fig:pyramid}
+\end{figure}
 
 En kube er den svakeste formen siden den vil oppleve plan forskyving og knekke enkelt Figure \ref{fig:cube}
+
+\begin{figure}[H]
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=\subimgw]{cube-a}
+
+		\caption{Cube}
+		\label{fig:cube:a}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=\subimgw]{cube-untranslated}
+
+		\caption{Undemonstartive cube}
+		\label{fig:cube:untranslated}
+	\end{subfigure}
+
+	\caption{Cube}
+	\label{fig:cube}
+\end{figure}
 
 \addcontentsline{toc}{section}{Oppgave 2}
 \section*{Oppgave 2}
