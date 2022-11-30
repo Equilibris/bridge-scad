@@ -166,13 +166,41 @@ Miljø: det å bygge en bru er en prosess som krever mye energi og ressurser som
 \addcontentsline{toc}{section}{Oppgave 5}
 \section*{Oppgave 5}
 
-Som blir å synes i besverelse i oppgave 7 har vi bestemt oss for å modelere bruen vår som en $\cosh$ funksjon. Gjennom dette og litt geometrisk resonemang har det ledet oss til å lage et simulasjons generasjons program som ligger Appendix \ref{sec:jhu-gen}. Denne koden genererer en JHU save file som så lastes inn og man utfører simulasjonen.
+Som blir å synes i besverelse i oppgave 7 har vi bestemt oss for å modelere bruen vår som en $\cosh$ funksjon. Gjennom dette og litt geometrisk resonemang har det ledet oss til å lage et simulasjons generasjons program som ligger Appendix \ref{sec:jhu-gen}. Denne koden genererer en JHU save file som så lastes inn og man utfører simulasjonen. Dette resulterer så i Figur \ref{fig:jhu} der du kan se resultatet av simuleringen.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics [width=.8\linewidth]{jhu}
+	\caption{Jhu simulation of bridge from generation code}
+	\label{fig:jhu}
+\end{figure}
+
+Vi har bestemt oss for å ikke inkludere "member list" i dette dokumentet siden det kan trivielt uthentes av generator programmet; kjør generator programmet og undersøk outputet.
 
 \addcontentsline{toc}{section}{Oppgave 6}
 \section*{Oppgave 6}
 
+Koden for utførelse av oppgave 6 er lokalisert i Appendix \ref{sec:jhu-gen} sammen med JHU-gen koden. Kjører du programmet så ser du at den printer all informasjon som skal til. Dette er \lstinline{total_force_irl} og \lstinline{pascal} som svar på 6a, \lstinline{roind(distribution,2)} er svar på 6b, \lstinline{total_force_model} og \lstinline{round(total_force_model/g,2)} er svar på 6c.
+
+\subsection*{D}
+
+TODO
+
 \addcontentsline{toc}{section}{Oppgave 7}
 \section*{Oppgave 7}
+
+\subsection {Hvorfor $\cosh$}
+
+\subsection {Feiler under bygging}
+
+\subsection {Features av slutt bruen}
+
+\subsubsection {Percentage extending baserods}
+\subsubsection {Stabelizing backplate}
+\subsubsection {Internailzed standoff}
+\subsubsection {Node indexing}
+\subsubsection {Cross section margin connections}
+
 
 \chapter{Appendix}
 

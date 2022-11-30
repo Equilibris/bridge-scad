@@ -1,0 +1,17 @@
+{
+    "version": "0.2",
+    "language": "no-nb",
+
+    "dictionaries": ["latex", "english"],
+    "words": [
+        "mkdirp",
+        "tsmerge",
+        "githubusercontent",
+        "streetsidesoftware",
+        "vsmarketplacebadge",
+        "visualstudio"
+    ],
+    "flagWords": [
+        "hte"
+    ]
+}

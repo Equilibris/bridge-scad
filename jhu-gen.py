@@ -47,16 +47,16 @@ lain = 2
 g = 9.81
 
 total_force_irl = (2 * mass_car * l_m_irl / len_car) * g
-print(total_force_irl,"N")
+print(f"{total_force_irl=}","N")
 
 pascal = total_force_irl / (l_m_irl * w_m_irl)
-print(pascal,"Pa")
+print(f"{pascal=}","Pa")
 
 total_force_model = pascal * (width / 100) * (length / 100)
-print(total_force_model,"N",total_force_model/g,"kg")
+print(f"{total_force_model=}","N",f"{round(total_force_model/g,2)=}","kg")
 
 distribution = total_force_model / (n - 1)
-print(distribution, "N")
+print(f"{round(distribution,2)=}", "N")
 
 # Build Bridge
 nodes = [ ]
@@ -105,9 +105,4 @@ with open('out.json','w') as f:
           "force-scale": 100
         }
     }))
-
-print(nodes[1],nodes[3])
-
-for k,v in member_dst.items():
-    print(f'{k:<6} {round(v,1)}')
 

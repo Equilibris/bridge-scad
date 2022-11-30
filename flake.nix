@@ -7,7 +7,7 @@
     flake-utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system}; in
       {
-        devShell = {
+        devShell = pkgs.mkShell {
           packages = with pkgs; [python310];
         };
       }
