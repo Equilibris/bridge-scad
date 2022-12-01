@@ -7,6 +7,9 @@
 \usepackage{subcaption}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{apacite}
+
+\bibliographystyle{apacite}
 
 \graphicspath{ {./assets/} {..} }
 
@@ -50,10 +53,9 @@
 
 \chapter{Oppgaver}
 
-\addcontentsline{toc}{section}{Oppgave 1}
-\section*{Oppgave 1}
+\section{Oppgave 1}
 
-\subsection*{A}
+\subsection{A}
 
 I denne oppgaven ble det laget en rekke figurer ut av spagettis. Grunnen til dette var for å se hvordan effekt forskyvings kreftene hadde på de forskjellige figurene med å se hvilken av sidene knakk når figuren ble underlagt trykk.
 
@@ -65,7 +67,7 @@ En rettvinklet trekant er sterkest på den korteste katen.
 
 En firkant er svakest siden den har mulighet til å oppleve plan-forskyvning.
 
-\subsection*{B}
+\subsection{B}
 
 Triangulær pyramide har de samme styrkene som en likesidet trekant hvor hvor den tåler fra hver av sidene og den fordeler likt gjennom hele figuren
 
@@ -133,13 +135,11 @@ En kube er den svakeste formen siden den vil oppleve plan forskyving og knekke e
 	\label{fig:cube}
 \end{figure}
 
-\addcontentsline{toc}{section}{Oppgave 2}
-\section*{Oppgave 2}
+\section{Oppgave 2}
 
 I denne oppgaven skulle man regne ut en målestokk for gruppens modellbru. Dette gjør mann med å bruke bruen virkelige størrelse og dele det på gruppens utvalgte målestokk
 
-\addcontentsline{toc}{section}{Oppgave 3}
-\section*{Oppgave 3}
+\section{Oppgave 3}
 
 
 \begin{figure}[t]
@@ -152,8 +152,7 @@ I denne oppgaven skulle man regne ut en målestokk for gruppens modellbru. Dette
 
 I oppgave 3 skulle man bruke målestokken man har regnet ut tidligere for å lage en arbeidstegning. Dette skulle egentlig gjøres på ark som ble gjort, men når dette ble gjort var ikke tegningen nøyaktig og den ble heller programer inn i open SCAD for å få den mest mulig nøyaktig.
 
-\addcontentsline{toc}{section}{Oppgave 4}
-\section*{Oppgave 4}
+\section{Oppgave 4}
 
 \textbf {Lofoten}
 
@@ -163,8 +162,7 @@ Pride: Lofoten er blant de kommunene med høyest rate av mennesker som akseptere
 
 Miljø: det å bygge en bru er en prosess som krever mye energi og ressurser som er veldig skadelig for miljøet. Ifølge Architecture 2030 så står Bygg og konstruksjons industrien for 40\% av årlige utslipp dette er grunnen til at vår bru er bygget med sol celle panel slik at bruen etter mange vil bli karbon nøytral og i tillegg hjelpe lokal miljøet
 
-\addcontentsline{toc}{section}{Oppgave 5}
-\section*{Oppgave 5}
+\section{Oppgave 5}
 
 Som blir å synes i besverelse i oppgave 7 har vi bestemt oss for å modelere bruen vår som en $\cosh$ funksjon. Gjennom dette og litt geometrisk resonemang har det ledet oss til å lage et simulasjons generasjons program som ligger Appendix \ref{sec:jhu-gen}. Denne koden genererer en JHU save file som så lastes inn og man utfører simulasjonen. Dette resulterer så i Figur \ref{fig:jhu} der du kan se resultatet av simuleringen.
 
@@ -177,8 +175,7 @@ Som blir å synes i besverelse i oppgave 7 har vi bestemt oss for å modelere br
 
 Vi har bestemt oss for å ikke inkludere "member list" i dette dokumentet siden det kan trivielt uthentes av generator programmet; kjør generator programmet og undersøk outputet.
 
-\addcontentsline{toc}{section}{Oppgave 6}
-\section*{Oppgave 6}
+\section{Oppgave 6}
 
 Koden for utførelse av oppgave 6 er lokalisert i Appendix \ref{sec:jhu-gen} sammen med JHU-gen koden. Kjører du programmet så ser du at den printer all informasjon som skal til. Dette er \lstinline{total_force_irl} og \lstinline{pascal} som svar på 6a, \lstinline{roind(distribution,2)} er svar på 6b, \lstinline{total_force_model} og \lstinline{round(total_force_model/g,2)} er svar på 6c.
 
@@ -186,27 +183,42 @@ Koden for utførelse av oppgave 6 er lokalisert i Appendix \ref{sec:jhu-gen} sam
 
 TODO
 
-\addcontentsline{toc}{section}{Oppgave 7}
-\section*{Oppgave 7}
+\section{Oppgave 7}
 
 \subsection {Hvorfor $\cosh$}
 
+Vi har bestemt oss for å modelere bruen som en $\cosh$ kurve gjennom at den er grunnlaget for en catenery curve: kurven som minimaliserer potensiel energi av en funksjon \cite{wiki:catenery}. Gjennom at den minimaliserer potensiel energi så er det også den sterkeste mulige kurve med get en gitt lengde på archen.
+
 \subsection {Feiler under bygging}
+
+Under første iterasjon av broen så brukte vi spheriske knutepunkter. Dette var negativt for flere grunner.
+\begin{enumerate}
+	\item Det kaster bort plastik; vi trenger ikke det extra toleranse for rotasjonelle krefter.
+	\item De var vanskelig å printe; vi trengte extreme mengder med supports og i noen tilfeller supports vi ikke kunne fjerne.
+\end{enumerate}
 
 \subsection {Features av slutt bruen}
 
 \subsubsection {Percentage extending baserods}
+
+Gjennom designet så vi at vi trenger å feste grunnstavene sammen. Dette var et problem vi bestemte oss for å løse med å legge til en utvited nederst rod. Dette kan synes i Appendix \ref{sec:openscad}:\ref{line:brescale}. Vi endte opp med å velge en extention faktor av \lstinline{BASE_RESIZE = 6}.
+
 \subsubsection {Stabelizing backplate}
+
+Gjennom testing så vi at extention pinnene som knutepunktet består av kunne brekke av. Dette var noe vi så kompanserte med av å lage en poligonal backplate. Denne backplaten sin struktur er refrencet i Appendix \ref{sec:openscad}:\ref{line:backplate}. Kodestilen brukt er variabler i static single-assignment form \cite{wiki:ssaf}.
+
 \subsubsection {Internailzed standoff}
+
 \subsubsection {Node indexing}
 \subsubsection {Cross section margin connections}
-
+\subsubsection {Lamination direction}
 
 \chapter{Appendix}
 
 \section{Refrence to OpenSCAD code}
+\label{sec:openscad}
 
-\lstinputlisting{../bridge.scad}
+\lstinputlisting[escapechar=~]{../bridge.scad}
 
 \section{Recrence to Python JHU-generation code}
 \label{sec:jhu-gen}
@@ -215,6 +227,8 @@ TODO
 
 \addcontentsline{toc}{section}{List of figures}
 \listoffigures
+
+\bibliography{report}
 
 \end{document}
 

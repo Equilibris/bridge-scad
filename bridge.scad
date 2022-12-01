@@ -17,7 +17,7 @@ S = 0.5;
 
 STEP_PERCENT_A = .28;
 STEP_PERCENT_B = .25;
-BASE_RESCALE = 6;
+BASE_RESCALE = 6; // Base rescale factor ~\label{line:brescale}~
 BEAM_RAD = 0.7*S;
 BAL_RAD = 1.5*S;
 
@@ -118,6 +118,7 @@ module arch (points, height,nums=true) {
                 l_ssa1
             ),
 
+            // backplate SSA ~\label{line:backplate}~
             l_ssa3 = concat(
                 l_ssa2,
                 i != 0 ? [swXZ(p2ptB)] : []
