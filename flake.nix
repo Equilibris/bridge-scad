@@ -8,7 +8,19 @@
       let pkgs = nixpkgs.legacyPackages.${system}; in
       {
         devShell = pkgs.mkShell {
-          packages = with pkgs; [python310];
+          packages = with pkgs; [
+            python310
+
+            texlab
+            (texlive.combine {
+              inherit (texlive)
+                scheme-medium
+                runcode morewrites tcolorbox environ apacite
+                xifthen ifmtarg framed paralist
+                titlesec
+                blindtext;
+            })
+          ];
         };
       }
     );
