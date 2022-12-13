@@ -8,12 +8,13 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{apacite}
+\usepackage{url}
 
 \bibliographystyle{apacite}
 
 \graphicspath{ {./assets/} {..} }
 
-\newcommand{\subimgw}{.5\linewidth}
+\newcommand{\subimgw}{.7\linewidth}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -58,7 +59,8 @@
 	\begin{tabular}{c|c}
 		Term       & Definition                                       \\
 		\hline
-		Arch       & The loadbering arch of the bridge                \\
+		Arch       & The loadbering arch of the bridge; overgurt      \\
+		Baselines  & The main baseis for the bridge; undergurt        \\
 		SCAD space & Nodes with the indexing scheme used in Open SCAD \\
 		JGU space  & Nodes with the indexing scheme used in JHU       \\
 	\end{tabular}
@@ -98,14 +100,14 @@ Triangulær pyramide har de samme styrkene som en likesidet trekant hvor hvor de
 \begin{figure}[H]
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=\subimgw]{tetrehedra-a}
+		\includegraphics[width=\subimgw,trim={0 20cm 0 0},clip]{tetrehedra-a}
 		\caption{Compression bucle isomorphism}
 
 		\label{fig:tetrehedra:a}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=\subimgw]{tetrehedra-b}
+		\includegraphics[width=\subimgw,trim={0 20cm 0 0},clip]{tetrehedra-b}
 		\caption{Buckle force direction of tetrehedra}
 
 		\label{fig:tetrehedra:untranslated}
@@ -307,9 +309,70 @@ Vi hadde bestemt oss for å printe på sånn et vis at vi fikk infille i den ret
 
 \section{Oppgve 8}
 
-During testing we progressivley increased the force we applied to the bridge. We hit our threshold of $35\mathrm{kg}$ found in Section \ref{sec:f-calc}. After we hit this threshold out of pure spite we decided to continue until the bridge snapped. This stems from long painful work and low sentimental commitment. We finally reached $80\mathrm{kg}$. During this we would expect the arch to snap first (stemming from Figure \ref{fig:jhu}). This was not what we saw. We noted the snap was the member between the nodes 6 and 7 in SCAD space.
+During testing we progressivley increased the force we applied to the bridge. We hit our threshold of $35\mathrm{kg}$ found in Section \ref{sec:f-calc}. After we hit this threshold out of pure spite we decided to continue until the bridge snapped. This stems from long painful work and low sentimental commitment. We finally reached $80\mathrm{kg}$. During this we would expect the arch to snap first (stemming from Figure \ref{fig:jhu}). This was not what we saw. We noted the snap was the member between the nodes 6 and 7 in SCAD space. This deformation can be seen in progress in Figure \ref{fig:deform}. We are unsure what caused this. Our strongest hypothesis is that there was a lacking quantity of glue in the 6th node. This arises from inspecting that that Node 7 contained wood remains. This can be seen in Figure \ref{fig:snap:7}. As opposed to this we can see that the joint in node 6 did not contain this potentaially signaling that the beam simply slid out when the force got too great. This can be seen in Figure \ref{fig:snap:6}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics [width=.8\linewidth]{bend-closer}
+	\caption{Deformation of nodes 6 \and 7}
+	\label{fig:deform}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=\subimgw,trim={0 40cm 0 5cm},clip]{beam-6}
+
+		\caption{Node 7 snap joint}
+		\label{fig:snap:7}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=\subimgw,trim={0 5cm 0 40cm},clip]{beam-7}
+
+		\caption{Node 6 snap joint}
+		\label{fig:snap:6}
+	\end{subfigure}
+
+	\caption{Nodes between the broken member}
+	\label{fig:snap}
+\end{figure}
 
 \section{Oppgve 9}
+
+\subsection{a}
+
+After constructing the basis for the bridge out of solely biodagradable and reciclable materials \cite{wiki:pla}. This aligns with our ideas of a ecological and green solution for the bridge.
+
+On top of this we have added a solar panel as decoration of the bridge. This is to represent how in the final version solar panels will be previlant throught the construction.
+
+Other decorations include themeing the bridge around pride and accedentally making Rainbow Road from Mario Kart. See Figure \ref{fig:gey} for a visual comparison.
+
+Finally we decorated the bridge with Lofoten themed decore such as Fish and Fishing eqipment.
+
+\begin{figure}[H]
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=\subimgw,trim={0 10cm 0 0},clip]{rainbow-road}
+
+		\caption{Rainbow Road}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=\subimgw,trim={0 0 0 0},clip]{top}
+
+		\caption{Bridge topview}
+	\end{subfigure}
+
+	\caption{Comparisson of bridge and rainbow road}
+	\label{fig:gey}
+\end{figure}
+
+\subsection{b}
+
+\subsection{c}
+
+During testing of the bridge we noticed the load being placed on the baseline of the bridge was larger than expected both through intuition and following the simulations found in Figure \ref{fig:jhu}. This has lead us to desire to modify the joint generation code to include variable radius beams. This feature would require quite a bit more code and manual labour. Through avoiding this we have constructed the strongest tested bridge that does not employ thicker beams.
 
 \chapter{Appendix}
 
@@ -326,6 +389,6 @@ During testing we progressivley increased the force we applied to the bridge. We
 \addcontentsline{toc}{section}{List of figures}
 \listoffigures
 
-% \bibliography{report}
+\bibliography{report}
 
 \end{document}
